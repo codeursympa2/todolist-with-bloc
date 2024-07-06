@@ -16,30 +16,7 @@ final class TaskLoadingState extends TaskState {
   const TaskLoadingState();
 }
 
-// Chargement ajout task
-final class TaskAddingState extends TaskState {
-  const TaskAddingState();
-}
 
-// Fin récupération de la liste
-class TaskLoadedState extends TaskState {
-  final List<Task> todos;
-
-  const TaskLoadedState({required this.todos});
-
-  @override
-  List<Object?> get props => [todos];
-}
-
-// Pas de taches
-class TasksEmptyState extends TaskState {
-  final String error;
-
-  const TasksEmptyState({required this.error});
-
-  @override
-  List<Object?> get props => [error];
-}
 
 // Etat de succès après une opération
 class TaskSuccessState extends TaskState {

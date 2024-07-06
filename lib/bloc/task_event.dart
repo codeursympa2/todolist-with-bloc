@@ -20,24 +20,6 @@ class TaskSaveEvent extends TaskEvent{
   List<Object?> get props => [task];
 }
 
-class TaskDeleteEvent extends TaskEvent{
-  final Task task;
-
-  const TaskDeleteEvent({required this.task});
-
-  @override
-  List<Object?> get props => [task];
-}
-
-final class TaskListEvent extends TaskEvent{
-  const TaskListEvent();
-}
-
-
-final class TaskListWithoutLoadingEvent extends TaskEvent{
-  const TaskListWithoutLoadingEvent();
-}
-
 class TaskFindByIdEvent extends TaskEvent{
   final int id;
 

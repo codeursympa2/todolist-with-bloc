@@ -24,24 +24,14 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     on<TaskSaveEvent>((event,emit) async{
       await _onSaveEvent(event,emit);
     });
-    //Listing
-    on<TaskListEvent>( (event,emit) async{
-      await _onListEvent(event, emit);
-    });
-    //Suppression
-    on<TaskDeleteEvent>((event ,emit){
-      _onDeleteEvent(event,emit);
-    });
-    //Recupération d'une liste en background sans la progression
-    on<TaskListWithoutLoadingEvent>((event,emit)async{
-      await _onListWithoutLoadingEvent(event,emit);
-    });
+
+
     //Recupération d'une tâche
     on<TaskFindByIdEvent>((event,emit)async{
       await _onFindByIdEvent(event,emit);
     });
     //Nombre total des tâches
-    on<TaskTotalListEvent>(_onListTotalEvent);
+    //on<TaskTotalListEvent>(_onListTotalEvent);
   }
 
   Future<void> _onInitialEvent(TaskInitialEvent event, Emitter<TaskState> emit) async {
@@ -51,7 +41,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   Future<void> _onSaveEvent(TaskSaveEvent event, Emitter<TaskState> emit) async{
     late final String typeOperation;
     try{
-      emit(const TaskAddingState());
+      emit(const TaskLoadingState());
       final Task task=event.task;
       if(task.id != null){
         //On fait la mise à jour
@@ -68,35 +58,6 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     }
   }
 
-  Future<void> _onListEvent(TaskListEvent event, Emitter<TaskState> emit) async{
-    //On écoute
-    //monitorSaveTodo(emit);
-    try{
-      emit(const TaskLoadingState());
-      await _listTaskWithoutLoading(emit);
-    }catch(e){
-      _emitFailureState(emit);
-    }
-  }
-
-  Future<void> _onDeleteEvent(TaskDeleteEvent event, Emitter<TaskState> emit) async{
-    //Récuperation de la tache via l'evenement
-    final Task task= event.task;
-    try{
-      dbService.deleteTask(task);
-      emit(const TaskSuccessState("Tâche supprimée."));
-    }catch(e){
-      emit(const TaskFailureState(errorMessage));
-    }
-  }
-
-  Future<void> _onListWithoutLoadingEvent(TaskListWithoutLoadingEvent event, Emitter<TaskState> emit) async{
-    try{
-     await _listTaskWithoutLoading(emit);
-    }catch(e){
-      _emitFailureState(emit);
-    }
-  }
 
   Future<void> _onFindByIdEvent(TaskFindByIdEvent event, Emitter<TaskState> emit) async{
     try{
@@ -123,20 +84,6 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     }
   }
 
-  Future<void> _listTaskWithoutLoading(Emitter<TaskState> emit) async{
-    List<Task> todos=[];
-    todos=await dbService.getAllTasks();
-
-    if(todos.isEmpty){
-      await Future.delayed(queryDuration,(){
-        emit(const TasksEmptyState(error: noData));
-      });
-    }else{
-      await Future.delayed(queryDuration,(){
-        emit(TaskLoadedState(todos: todos));
-      });
-    }
-  }
 
   void _emitFailureState(Emitter<TaskState> emit){
     emit(const TaskFailureState(errorMessage));
@@ -146,7 +93,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   void monitorSaveTodo(Emitter<TaskState> emit){
     streamSubscription= stream.listen((TaskState state) async{
       if(state is TaskSuccessState){
-        _listTaskWithoutLoading(emit);
+        //_listTaskWithoutLoading(emit);
       }
     });
   }

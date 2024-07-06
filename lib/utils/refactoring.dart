@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:todolist_with_bloc/bloc/form/task_form_bloc.dart';
+import 'package:todolist_with_bloc/bloc/list_page/list_page_bloc.dart';
 import 'package:todolist_with_bloc/bloc/task_bloc.dart';
 import 'package:todolist_with_bloc/constants/colors.dart';
 import 'package:todolist_with_bloc/data/domain/task.dart';
@@ -37,7 +38,7 @@ String truncateString(String text, int length) {
 void back(BuildContext context) {
   context.pop();
   //rechargement
-  BlocProvider.of<TaskBloc>(context).add(const TaskListWithoutLoadingEvent());
+  BlocProvider.of<ListPageBloc>(context).add(const ListPageLoadWithoutProgressBarEvent());
 }
 
 void validateTaskForm(BuildContext context,Task task){

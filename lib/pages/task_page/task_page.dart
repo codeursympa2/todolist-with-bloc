@@ -27,9 +27,9 @@ class _TaskState extends State<TaskPage> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    super.initState();
     id=widget.id;
     controller1 = GifController(vsync: this);
-    super.initState();
   }
 
   @override
@@ -52,11 +52,11 @@ class _TaskState extends State<TaskPage> with TickerProviderStateMixin {
         backgroundColor: secondary,
       ),
       body: BlocListener<TaskBloc, TaskState>(
-        listener: (context, state){
-          if (state is TaskAddingState) {
+        listener: (context, state) async {
+          if (state is TaskLoadingState) {
              _showLoadingDialog(context);
           } else if (state is TaskSuccessState) {
-            _handleSuccessState(context, state);
+            await _handleSuccessState(context, state);
           } else if (state is TaskFailureState) {
             toastMessage(context: context, message: state.error, color: danger);
           }
@@ -74,7 +74,7 @@ class _TaskState extends State<TaskPage> with TickerProviderStateMixin {
     );
   }
 
-  //Affichae circular progress bar
+  //Affichage circular progress bar
   void _showLoadingDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -87,9 +87,11 @@ class _TaskState extends State<TaskPage> with TickerProviderStateMixin {
   //etat de success
   Future<void> _handleSuccessState(BuildContext context, TaskSuccessState state)  async {
     toastMessage(context: context, message: state.message, color: primary);
-    //On vide le formulaire
-    validateTaskForm(context,Task.withoutId("", ""));
-    context.go('/home');
+
+    await Future.delayed(const Duration(seconds: 2),(){
+      context.go("/home");
+    });
+
   }
 }
 

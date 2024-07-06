@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:todolist_with_bloc/bloc/list_page/list_page_bloc.dart';
+import 'package:todolist_with_bloc/bloc/task_bloc.dart';
 import 'package:todolist_with_bloc/constants/colors.dart';
 import 'package:todolist_with_bloc/constants/numbers.dart';
 import 'package:todolist_with_bloc/constants/strings.dart';
@@ -52,14 +53,19 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       backgroundColor: secondary,
-      body: BlocListener<ListPageBloc,ListPageState>(listener: (context,state){
-          if(state is ListPageSuccessState){
-            toastMessage(context: context, message: state.message, color: primary);
-          }
-          if(state is ListPageFailureState){
-            toastMessage(context: context, message: state.message, color: danger);
-          }
-    },child:SafeArea(
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<ListPageBloc,ListPageState>(listener: (context,state){
+            if(state is ListPageSuccessState){
+              toastMessage(context: context, message: state.message, color: primary);
+            }
+            if(state is ListPageFailureState){
+              toastMessage(context: context, message: state.message, color: danger);
+              }
+            }
+          ),
+        ],
+        child:SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
