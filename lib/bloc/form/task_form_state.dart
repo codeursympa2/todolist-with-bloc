@@ -15,7 +15,7 @@ class TaskFormValidating extends TaskFormState{
   final TaskFieldsFormError? formFieldsErrors;
 
   const TaskFormValidating({
-    this.formFieldsErrors,
+    required this.formFieldsErrors,
   });
 
   @override

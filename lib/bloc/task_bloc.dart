@@ -21,19 +21,25 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     //init
     on<TaskInitialEvent>(_onInitialEvent);
     //Mise à jour et enregistrement
-    on<TaskSaveEvent>(_onSaveEvent);
+    on<TaskSaveEvent>((event,emit) async{
+      await _onSaveEvent(event,emit);
+    });
     //Listing
     on<TaskListEvent>( (event,emit) async{
       await _onListEvent(event, emit);
     });
     //Suppression
-    on<TaskDeleteEvent>(_onDeleteEvent);
+    on<TaskDeleteEvent>((event ,emit){
+      _onDeleteEvent(event,emit);
+    });
     //Recupération d'une liste en background sans la progression
     on<TaskListWithoutLoadingEvent>((event,emit)async{
       await _onListWithoutLoadingEvent(event,emit);
     });
     //Recupération d'une tâche
-    on<TaskFindByIdEvent>(_onFindByIdEvent);
+    on<TaskFindByIdEvent>((event,emit)async{
+      await _onFindByIdEvent(event,emit);
+    });
     //Nombre total des tâches
     on<TaskTotalListEvent>(_onListTotalEvent);
   }
@@ -44,9 +50,8 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
 
   Future<void> _onSaveEvent(TaskSaveEvent event, Emitter<TaskState> emit) async{
     late final String typeOperation;
-    emit(const TaskLoadingState());
-
     try{
+      emit(const TaskAddingState());
       final Task task=event.task;
       if(task.id != null){
         //On fait la mise à jour
@@ -57,11 +62,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         await dbService.addTask(task);
         typeOperation="ajoutée";
       }
-      //On patiente 1 seconde pour pouvoir afficher la barre de progression
-      await Future.delayed(
-          queryDuration,
-              () => emit(TaskSuccessState("Tâche $typeOperation."))
-      );
+      emit(TaskSuccessState("Tâche $typeOperation."));
     }catch(e){
       _emitFailureState(emit);
     }
@@ -69,10 +70,10 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
 
   Future<void> _onListEvent(TaskListEvent event, Emitter<TaskState> emit) async{
     //On écoute
-    monitorSaveTodo(emit);
-    emit(const TaskLoadingState());
+    //monitorSaveTodo(emit);
     try{
-       await _listTaskWithoutLoading(emit);
+      emit(const TaskLoadingState());
+      await _listTaskWithoutLoading(emit);
     }catch(e){
       _emitFailureState(emit);
     }

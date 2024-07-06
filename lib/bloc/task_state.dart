@@ -16,6 +16,11 @@ final class TaskLoadingState extends TaskState {
   const TaskLoadingState();
 }
 
+// Chargement ajout task
+final class TaskAddingState extends TaskState {
+  const TaskAddingState();
+}
+
 // Fin récupération de la liste
 class TaskLoadedState extends TaskState {
   final List<Task> todos;

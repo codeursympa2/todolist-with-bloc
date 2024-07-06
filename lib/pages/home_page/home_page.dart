@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:todolist_with_bloc/bloc/task_bloc.dart';
+import 'package:todolist_with_bloc/bloc/list_page/list_page_bloc.dart';
 import 'package:todolist_with_bloc/constants/colors.dart';
 import 'package:todolist_with_bloc/constants/numbers.dart';
 import 'package:todolist_with_bloc/constants/strings.dart';
+import 'package:todolist_with_bloc/utils/refactoring.dart';
 import 'package:todolist_with_bloc/utils/task_common_widgets.dart';
 
 
@@ -24,18 +25,18 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    BlocProvider.of<TaskBloc>(context).add(const TaskListEvent());
+    super.initState();
+    BlocProvider.of<ListPageBloc>(context).add(const ListPageLoadTasksEvent());
     _listener=AppLifecycleListener(
       onStateChange: _onStateChanged,
     );
-    super.initState();
-
   }
 
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
+    //On écoute en cas de succés d'une requete
+    return  Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: primary,
@@ -51,7 +52,14 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       backgroundColor: secondary,
-      body: SafeArea(
+      body: BlocListener<ListPageBloc,ListPageState>(listener: (context,state){
+          if(state is ListPageSuccessState){
+            toastMessage(context: context, message: state.message, color: primary);
+          }
+          if(state is ListPageFailureState){
+            toastMessage(context: context, message: state.message, color: danger);
+          }
+    },child:SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -61,8 +69,8 @@ class _HomePageState extends State<HomePage> {
               //Chip options
               const SizedBox(height: 10,),
               Expanded(
-                child: BlocBuilder<TaskBloc,TaskState>(
-                  builder: (event,state){
+                child: BlocBuilder<ListPageBloc,ListPageState>(
+                  builder: (context,state){
                     return contentHomePage(state);
                   },
                 ),
@@ -71,9 +79,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-
-
-    );
+    ));
   }
 
 
@@ -85,7 +91,7 @@ class _HomePageState extends State<HomePage> {
 
   void _onStateChanged(AppLifecycleState state) {
     if(state == AppLifecycleState.resumed){
-      BlocProvider.of<TaskBloc>(context).add(const TaskListWithoutLoadingEvent());
+      BlocProvider.of<ListPageBloc>(context).add(const ListPageLoadWithoutProgressBarEvent());
     }
   }
 

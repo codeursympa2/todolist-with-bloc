@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:todolist_with_bloc/bloc/list_page/list_page_bloc.dart';
 import 'package:todolist_with_bloc/bloc/task_bloc.dart';
 import 'package:todolist_with_bloc/constants/colors.dart';
 import 'package:todolist_with_bloc/constants/numbers.dart';
 import 'package:todolist_with_bloc/data/domain/task.dart';
 import 'package:todolist_with_bloc/utils/refactoring.dart';
 
-Widget contentHomePage(TaskState state){
-  if (state is TaskInitialState) {
+Widget contentHomePage(ListPageState state){
+  if (state is ListPageInitialState) {
     return Container();
-  } else if (state is TaskLoadingState) {
+  } else if (state is ListPageLoadingState) {
     return const Center(
       child: CircularProgressIndicator(),
     );
-  } else if (state is TasksEmptyState) {
-    return Center(child: Text(state.error));
-  } else if (state is TaskLoadedState) {
+  } else if (state is ListPageEmptyState) {
+    return Center(child: Text(state.message));
+  } else if (state is ListPageLoadedState) {
     return ListView.builder(
       itemCount: state.todos.length,
       itemBuilder: (context, index) {
@@ -26,7 +28,7 @@ Widget contentHomePage(TaskState state){
             direction: DismissDirection.startToEnd,
             onDismissed: (direction) async {
               //suppression
-              //ref.read(taskProvider.notifier).deleteTask(task);
+              BlocProvider.of<ListPageBloc>(context).add(ListPageDeleteTaskEvent(task: task));
             },
             background: Container(
               color: danger,
@@ -42,14 +44,14 @@ Widget contentHomePage(TaskState state){
               //Mise à jour état de la tâche
               task.isCompleted= task.isCompleted == 1 ? 0 :1 ;
               //ref.read(taskProvider.notifier).updateTaskIsCompleted(task);
-
+              BlocProvider.of<ListPageBloc>(context).add(ListPageCheckTaskEvent(task: task));
             }));
       },
     );
 
   } else{
     return const Center(
-      child: Text("Pas de connexion à la source"),
+      child: Text("Rechargement..."),
     );
   }
 }
@@ -71,7 +73,7 @@ Widget _taskItem(BuildContext context,Task task,VoidCallback actionIconButton){
         maxLines: 2
         ,style: Theme.of(context).textTheme.bodyMedium,),
       leading: _leftVerticalBarTask(task),
-      title:Text("${truncateString(task.name, 25)}",style: Theme.of(context).textTheme.headlineMedium,),
+      title:Text(truncateString(task.name, 25),style: Theme.of(context).textTheme.headlineMedium,),
       trailing: _iconTaskCardTransition(task,actionIconButton ),
     ),
   );

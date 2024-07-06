@@ -2,7 +2,10 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:todolist_with_bloc/bloc/form/task_form_bloc.dart';
+import 'package:todolist_with_bloc/bloc/task_bloc.dart';
 import 'package:todolist_with_bloc/constants/colors.dart';
+import 'package:todolist_with_bloc/data/domain/task.dart';
 
 Future<void> toastMessage({required BuildContext context, required String message, required Color color}) async{
 
@@ -27,12 +30,16 @@ String truncateString(String text, int length) {
   if (text.length <= length) {
     return text;
   } else {
-    return text.substring(0, length) + '...';
+    return '${text.substring(0, length)}...';
   }
 }
 
-Future<void> back(BuildContext context) async {
-  context.go('/home');
+void back(BuildContext context) {
+  context.pop();
   //rechargement
- // await ref.read(taskProvider.notifier).getDataWithoutLoadingList();
+  BlocProvider.of<TaskBloc>(context).add(const TaskListWithoutLoadingEvent());
+}
+
+void validateTaskForm(BuildContext context,Task task){
+  BlocProvider.of<TaskFormBloc>(context).add(TaskFormValidateEvent(task: task));
 }

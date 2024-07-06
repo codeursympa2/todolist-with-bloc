@@ -11,10 +11,10 @@ final class TaskFormInitialEvent extends TaskFormEvent{
 }
 
 class TaskFormValidateEvent extends TaskFormEvent{
-  final TaskFieldsFormError fieldsFormError;
-  const TaskFormValidateEvent({required this.fieldsFormError});
+  final Task task;
+  const TaskFormValidateEvent({required this.task});
 
   @override
-  List<Object?> get props => [fieldsFormError];
+  List<Object?> get props => [task];
 }
 
