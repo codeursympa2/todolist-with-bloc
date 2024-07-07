@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:todolist_with_bloc/bloc/form/task_form_bloc.dart';
+import 'package:todolist_with_bloc/bloc/task_page/form/task_form_bloc.dart';
 import 'package:todolist_with_bloc/bloc/list_page/list_page_bloc.dart';
-import 'package:todolist_with_bloc/bloc/task_bloc.dart';
+import 'package:todolist_with_bloc/bloc/task_page/task_bloc.dart';
 import 'package:todolist_with_bloc/constants/colors.dart';
 import 'package:todolist_with_bloc/constants/strings.dart';
+import 'package:todolist_with_bloc/pages/cta_page/cta_page.dart';
 import 'package:todolist_with_bloc/pages/home_page/home_page.dart';
+import 'package:todolist_with_bloc/pages/splash_screen/splash_screen.dart';
 import 'package:todolist_with_bloc/pages/task_page/task_page.dart';
-import 'package:todolist_with_bloc/pages/test_page.dart';
 
 
 final _router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => const HomePage(),
+      builder: (context, state) => const SplashScreen(),
       routes: [
         GoRoute(
           name: 'update',
@@ -37,11 +38,12 @@ final _router = GoRouter(
           builder: (context, state) {
            return const HomePage();
           },
-        ),GoRoute(
-          name: "test",
-          path: 'test',
+        ),
+        GoRoute(
+          name: "cta",
+          path: 'cta',
           builder: (context, state) {
-           return const TestPage();
+           return const CtaPage();
           },
         ),
     ]

@@ -2,9 +2,8 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:todolist_with_bloc/bloc/form/task_form_bloc.dart';
+import 'package:todolist_with_bloc/bloc/task_page/form/task_form_bloc.dart';
 import 'package:todolist_with_bloc/bloc/list_page/list_page_bloc.dart';
-import 'package:todolist_with_bloc/bloc/task_bloc.dart';
 import 'package:todolist_with_bloc/constants/colors.dart';
 import 'package:todolist_with_bloc/data/domain/task.dart';
 
@@ -12,15 +11,15 @@ Future<void> toastMessage({required BuildContext context, required String messag
 
   await Flushbar(
     flushbarPosition: FlushbarPosition.TOP,
-    duration: Duration(seconds: 3),
-    margin: EdgeInsets.all(5),
+    duration: const Duration(seconds: 3),
+    margin: const EdgeInsets.all(5),
     backgroundColor: color,
     borderRadius: BorderRadius.circular(8),
     mainButton: IconButton(
       onPressed: () {
         context.pop();
       },
-      icon: Icon(Icons.close,color: secondary,),
+      icon: const Icon(Icons.close,color: secondary,),
     ),
     message: message,
   ).show(context);
@@ -36,7 +35,7 @@ String truncateString(String text, int length) {
 }
 
 void back(BuildContext context) {
-  context.pop();
+  context.replace("/home");
   //rechargement
   BlocProvider.of<ListPageBloc>(context).add(const ListPageLoadWithoutProgressBarEvent());
 }

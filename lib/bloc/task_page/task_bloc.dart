@@ -24,14 +24,14 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     on<TaskSaveEvent>((event,emit) async{
       await _onSaveEvent(event,emit);
     });
-
-
     //Recupération d'une tâche
     on<TaskFindByIdEvent>((event,emit)async{
       await _onFindByIdEvent(event,emit);
     });
     //Nombre total des tâches
-    //on<TaskTotalListEvent>(_onListTotalEvent);
+    on<TaskTotalListEvent>((event,emit)async{
+      await _onListTotalEvent(event, emit);
+    });
   }
 
   Future<void> _onInitialEvent(TaskInitialEvent event, Emitter<TaskState> emit) async {
