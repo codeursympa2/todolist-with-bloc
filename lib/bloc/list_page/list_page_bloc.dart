@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:todolist_with_bloc/constants/strings.dart';
 import 'package:todolist_with_bloc/data/domain/task.dart';
-import 'package:todolist_with_bloc/data/services/database_service.dart';
+import 'package:todolist_with_bloc/data/local/services/database_service.dart';
 
 part 'list_page_event.dart';
 part 'list_page_state.dart';

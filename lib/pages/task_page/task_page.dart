@@ -88,7 +88,7 @@ class _TaskState extends State<TaskPage> with TickerProviderStateMixin {
   Future<void> _handleSuccessState(BuildContext context, TaskSuccessState state)  async {
     toastMessage(context: context, message: state.message, color: primary);
 
-    await Future.delayed(const Duration(seconds: 2),(){
+    await Future.delayed(const Duration(seconds: 1),(){
       context.go("/home");
     });
 
