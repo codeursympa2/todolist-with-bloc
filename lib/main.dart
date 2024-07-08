@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:todolist_with_bloc/bloc/task_page/form/task_form_bloc.dart';
-import 'package:todolist_with_bloc/bloc/list_page/list_page_bloc.dart';
-import 'package:todolist_with_bloc/bloc/task_page/task_bloc.dart';
+import 'package:todolist_with_bloc/bloc/list_page_bloc/list_page_bloc.dart';
+import 'package:todolist_with_bloc/bloc/task_page_bloc/form/task_form_bloc.dart';
+import 'package:todolist_with_bloc/bloc/task_page_bloc/task_bloc.dart';
 import 'package:todolist_with_bloc/constants/colors.dart';
 import 'package:todolist_with_bloc/constants/strings.dart';
 import 'package:todolist_with_bloc/pages/cta_page/cta_page.dart';

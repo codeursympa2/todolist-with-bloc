@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gif/gif.dart';
 import 'package:go_router/go_router.dart';
-import 'package:todolist_with_bloc/bloc/task_page/form/task_form_bloc.dart';
-import 'package:todolist_with_bloc/bloc/task_page/task_bloc.dart';
+import 'package:todolist_with_bloc/bloc/task_page_bloc/form/task_form_bloc.dart';
+import 'package:todolist_with_bloc/bloc/task_page_bloc/task_bloc.dart';
 import 'package:todolist_with_bloc/constants/colors.dart';
 import 'package:todolist_with_bloc/constants/numbers.dart';
 import 'package:todolist_with_bloc/data/domain/task.dart';
@@ -114,6 +114,8 @@ class _FormState extends State<_FormContent>{
 
   late bool _nameFocusable;
 
+  late Task task;
+
   _FormState();
 
   @override
@@ -133,7 +135,10 @@ class _FormState extends State<_FormContent>{
       if(state is TaskEditingState){
         //Validation du formulaire
         validateTaskForm(context, state.task);
-        _fillForm(state.task);
+        setState(() {
+          task=state.task;
+        });
+        _fillForm();
       }
       if(state is TaskFailureState){
         toastMessage(context: context, message: state.error, color: danger);
@@ -178,7 +183,7 @@ class _FormState extends State<_FormContent>{
         if(id == null){
           taskSave=Task.withoutId(_nameController.text, _descController.text);
         }else{
-          taskSave=Task.updateTask(int.tryParse(id!)!,_nameController.text, _descController.text);
+          taskSave=Task.updateTask(int.tryParse(id!)!,_nameController.text, _descController.text,task.isCompleted);
         }
         //On sauvegarde
         BlocProvider.of<TaskBloc>(context).add(TaskSaveEvent(task: taskSave));
@@ -297,7 +302,7 @@ class _FormState extends State<_FormContent>{
   }
 
   //
-  void _fillForm(Task task) {
+  void _fillForm() {
     setState(() {
       _nameController.text = task.name ?? "";
       _descController.text = task.desc ?? "";

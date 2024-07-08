@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:todolist_with_bloc/bloc/list_page/list_page_bloc.dart';
-import 'package:todolist_with_bloc/bloc/task_page/task_bloc.dart';
+import 'package:todolist_with_bloc/bloc/list_page_bloc/list_page_bloc.dart';
 import 'package:todolist_with_bloc/constants/colors.dart';
 import 'package:todolist_with_bloc/constants/numbers.dart';
 import 'package:todolist_with_bloc/data/domain/task.dart';
@@ -43,7 +42,6 @@ Widget contentHomePage(ListPageState state){
             child: _taskItem(context, task,(){
               //Mise à jour état de la tâche
               task.isCompleted= task.isCompleted == 1 ? 0 :1 ;
-              //ref.read(taskProvider.notifier).updateTaskIsCompleted(task);
               BlocProvider.of<ListPageBloc>(context).add(ListPageCheckTaskEvent(task: task));
             }));
       },
